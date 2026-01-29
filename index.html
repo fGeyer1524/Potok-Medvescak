@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medveščak: Izgubljena Arterija Zagreba</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,700;1,300&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #264653;
+            --secondary: #2a9d8f;
+            --accent: #e9c46a;
+            --text: #2b2d42;
+            --bg: #f0f2f5;
+            --paper-bg: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Merriweather', serif;
+            color: var(--primary);
+        }
+
+        /* HERO SEKCIJA (S tvojom slikom) */
+        header {
+            /* Ovdje se učitava tvoja slika */
+            background: url('Gemini_Generated_Image_6q127l6q127l6q12.png');
+            background-attachment: fixed; /* Parallax efekt */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            color: white;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            max-width: 800px;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+            font-weight: 300;
+        }
+
+        /* GLAVNI SADRŽAJ */
+        .container {
+            max-width: 1000px;
+            margin: -60px auto 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section {
+            background: var(--paper-bg);
+            padding: 50px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-left: 5px solid var(--secondary);
+        }
+
+        .quote-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            margin: 20px 0;
+            font-style: italic;
+            font-family: 'Merriweather', serif;
+            color: #555;
+        }
+
+        .highlight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .grid-item {
+            background: #eef5f6;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        /* KARTA */
+        #map-container {
+            position: relative;
+            height: 650px;
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        #map { height: 100%; width: 100%; }
+
+        .map-legend {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .legend-title { font-weight: bold; margin-bottom: 5px; display: block; }
+        .legend-item { display: flex; align-items: center; margin-bottom: 5px; }
+        .color-box { width: 20px; height: 5px; margin-right: 10px; border-radius: 2px; }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            background-color: var(--primary);
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .section { padding: 30px 20px; }
+            header { height: 60vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Potok Medveščak</h1>
+        <p class="subtitle">Od mlinova i sukoba do podzemnog kanala: Priča o vodi koja je izgradila, a potom podijelila Zagreb.</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="section">
+            <h2>Žila kucavica starog Zagreba</h2>
+            <p>Povijest Zagreba neodvojiva je od potoka Medveščaka (povijesno zvanog i Cirkvenik). On nije bio samo voda; bio je granica, izvor energije i života. Izvirao je podno Medvedgrada, a njegov tok dijelio se na tri cjeline: bujični gornji dio, mirniji dio kroz Ksaver s mlinovima, te nizinski dio kroz današnju Tkalčićevu ulicu.</p>
+            
+            <div class="highlight-grid">
+                <div class="grid-item">
+                    <h3>Granica svjetova</h3>
+                    <p>Stoljećima je potok bio prirodna granica između biskupskog Kaptola i slobodnog kraljevskog grada Gradeca. Mostovi preko njega, poput slavnog "Krvavog mosta", bili su mjesta trgovine, ali i žestokih sukoba.</p>
+                </div>
+                <div class="grid-item">
+                    <h3>Industrijski pogon</h3>
+                    <p>Početkom 19. stoljeća na potoku je radilo preko 45 mlinova. Tu su nikle prve manufakture: suknara Franje Kuševića, tvornica papira, te kasnije i industrijski pogoni poput tvornice kože.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Interaktivna rekonstrukcija toka</h2>
+            <p>Ova karta prikazuje dramatičnu promjenu toka potoka. <strong>Plava linija</strong> prikazuje povijesni tok kroz srce današnje Tkalčićeve ulice (prije 1898.), dok <strong>crvena linija</strong> prikazuje današnje, regulirano korito premješteno na istok (Ribnjak).</p>
+            <div id="map-container">
+                <div id="map"></div>
+            </div>
+            <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.7;">*Kliknite na linije za više detalja.</p>
+        </div>
+
+        <div class="section">
+            <h2>Od izvora života do "kloake"</h2>
+            <p>Industrijalizacija je donijela napredak, ali i ekološku katastrofu. Tvornica kože i okolna kućanstva ispuštali su otpad izravno u potok. Ljeti je smrad bio nesnošljiv, a potok je postao izvor zaraze. Milan Šenoa je 1890-ih opisao to područje kao mjesto "najveće bijede i mizerije".</p>
+            
+            <div class="quote-box">
+                "Grozni smrad, koji ova tvornica po gradu razprostire... tako je intenzivan, da pučanstvo istočnoga dijela gornjega grada... ne može prozora otvoriti." <br>
+                <span style="font-size: 0.8rem; display:block; margin-top:5px;">— Iz zapisa o stanju u Zagrebu, 19. st.</span>
+            </div>
+
+            <h3>Prelaganje potoka(1896. - 1898.)</h3>
+            <p>Nakon katastrofalnog potresa 1880. i poplave 1895., donesena je odluka. Inženjerski poduhvat tvrtke "G.A. Wayss" premjestio je potok u novo korito (ulice Ribnjak i Medveščak) te ga kasnije nadsvodio. Time je stvorena današnja urbana vizura Donjeg grada, a Tkalčićeva ulica je, nakon perioda siromaštva, postala turističko središte.</p>
+        </div>
+
+        <div class="section">
+            <h2>Budućnost: Daylighting?</h2>
+            <p>Danas, dok hodamo Tkalčićevom ili se vozimo tramvajem prema Mihaljevcu, ispod nas i dalje teče voda. Moderni urbanistički trendovi u svijetu (poput Seoula ili Utrechta) zagovaraju "daylighting" – ponovno otvaranje skrivenih potoka. Možemo li zamisliti Zagreb gdje Medveščak ponovno teče površinom, barem simbolički?</p>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>Temeljeno na istraživačkom radu: <strong>Zagreb i potočić – gdje je, kud je nestao?</strong></p>
+        <p>Autori rada: Lobel Marunić i Oleksandr Teslenko (Mentor: prof. Milorad Kondić)</p>
+        <p style="margin-top: 10px; font-size: 0.8rem; opacity: 0.6;">Vizualizacija podataka koristeći LeafletJS & GeoJSON</p>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        // Inicijalizacija karte
+        const map = L.map('map').setView([45.816, 15.983], 15);
+
+        // Tamna podloga za bolji kontrast povijesnih linija
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        // GeoJSON podaci (Integrirani iz tvoje datoteke)
+        const medvescakData = {
+          "type": "FeatureCollection",
+          "features": [
+            {
+              "type": "Feature",
+              "properties": {
+                "name": "Staro korito (Tkalčićeva)",
+                "period": "Prije 1898. godine",
+                "desc": "Izvorni tok kroz dolinu između Gradeca i Kaptola. Mjesto mlinova, manufaktura i obrta, ali i kasnije ekološke degradacije.",
+                "color": "#0077b6" 
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [15.978348, 45.827976], [15.978333, 45.827581], [15.978299, 45.827124], [15.978236, 45.826690], 
+                  [15.978147, 45.826367], [15.978038, 45.826129], [15.977917, 45.825917], [15.977797, 45.825712], 
+                  [15.977698, 45.825521], [15.977629, 45.825348], [15.977590, 45.825186], [15.977574, 45.825023], 
+                  [15.977578, 45.824857], [15.977594, 45.824683], [15.977614, 45.824499], [15.977629, 45.824302], 
+                  [15.977638, 45.824092], [15.977642, 45.823857], [15.977641, 45.823592], [15.977633, 45.823315], 
+                  [15.977607, 45.823052], [15.977549, 45.822799], [15.977439, 45.822508], [15.977258, 45.822125], 
+                  [15.977025, 45.821663], [15.976795, 45.821206], [15.976618, 45.820823], [15.976507, 45.820508], 
+                  [15.976443, 45.820202], [15.976409, 45.819869], [15.976398, 45.819538], [15.976402, 45.819258], 
+                  [15.976410, 45.819044], [15.976416, 45.818866], [15.976414, 45.818689], [15.976395, 45.818498], 
+                  [15.976354, 45.818282], [15.976304, 45.818035], [15.976271, 45.817769], [15.976275, 45.817514], 
+                  [15.976314, 45.817282], [15.976373, 45.817043], [15.976435, 45.816759], [15.976484, 45.816430], 
+                  [15.976505, 45.816088], [15.976496, 45.815748], [15.976456, 45.815422], [15.976376, 45.815121], 
+                  [15.976273, 45.814843], [15.976197, 45.814577], [15.976192, 45.814328], [15.976254, 45.814124], 
+                  [15.976350, 45.813975], [15.976449, 45.813876], [15.976543, 45.813814], [15.976637, 45.813773], 
+                  [15.976744, 45.813739], [15.976882, 45.813701], [15.977067, 45.813655], [15.977297, 45.813607], 
+                  [15.977548, 45.813565], [15.977805, 45.813540], [15.978081, 45.813540], [15.978403, 45.813561], 
+                  [15.978738, 45.813576], [15.979003, 45.813556], [15.979155, 45.813507], [15.979234, 45.813452], 
+                  [15.979289, 45.813400], [15.979335, 45.813325], [15.979368, 45.813203], [15.979396, 45.813051], 
+                  [15.979434, 45.812922], [15.979490, 45.812837], [15.979566, 45.812779], [15.979663, 45.812731], 
+                  [15.979775, 45.812689], [15.979887, 45.812654], [15.979991, 45.812624], [15.980107, 45.812592], 
+                  [15.980315, 45.812540], [15.980699, 45.812446], [15.981201, 45.812316], [15.981633, 45.812181], 
+                  [15.981896, 45.812055], [15.982047, 45.811921], [15.982161, 45.811760], [15.982272, 45.811582], 
+                  [15.982385, 45.811409], [15.982501, 45.811263], [15.982615, 45.811148], [15.982729, 45.811057], 
+                  [15.982844, 45.810983], [15.982961, 45.810926], [15.983083, 45.810880], [15.983306, 45.810832], 
+                  [15.984014, 45.810741], [15.985605, 45.810558], [15.987721, 45.810308], [15.989398, 45.810072], 
+                  [15.990200, 45.809879], [15.990475, 45.809690], [15.990613, 45.809481], [15.990725, 45.809271], 
+                  [15.990814, 45.809085], [15.990889, 45.808923], [15.990965, 45.808759], [15.991059, 45.808565], 
+                  [15.991174, 45.808346], [15.991298, 45.808138], [15.991419, 45.807977], [15.991530, 45.807866], 
+                  [15.991636, 45.807786], [15.991743, 45.807714], [15.991853, 45.807639], [15.991967, 45.807556], 
+                  [15.992084, 45.807461], [15.992217, 45.807342], [15.992384, 45.807182], [15.992587, 45.806968], 
+                  [15.992838, 45.806660], [15.993188, 45.806154], [15.993689, 45.805379], [15.994307, 45.804407]
+                ]
+              }
+            },
+            {
+              "type": "Feature",
+              "properties": {
+                "name": "Novo korito (Ribnjak)",
+                "period": "Nakon 1898. godine",
+                "desc": "Regulirani tok izgrađen zbog sanacije poplava i poboljšanja higijenskih uvjeta. Danas teče ispod Ribnjaka i Draškovićeve.",
+                "color": "#e76f51"
+              },
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [15.979410, 45.828208], [15.979523, 45.827935], [15.979614, 45.827621], [15.979700, 45.827304], 
+                  [15.979866, 45.826758], [15.980070, 45.826163], [15.980241, 45.825640], [15.980365, 45.825173], 
+                  [15.980413, 45.824848], [15.980429, 45.824601], [15.980424, 45.824384], [15.980343, 45.823898], 
+                  [15.980225, 45.823588], [15.980097, 45.823292], [15.979957, 45.822915], [15.979834, 45.822478], 
+                  [15.979796, 45.822238], [15.979689, 45.821543], [15.979469, 45.820395], [15.979426, 45.819980], 
+                  [15.979367, 45.819558], [15.979426, 45.819281], [15.980386, 45.817606], [15.980848, 45.816948], 
+                  [15.981116, 45.816514], [15.981298, 45.816223], [15.981534, 45.815804], [15.981770, 45.815378], 
+                  [15.981953, 45.814922], [15.982124, 45.814750], [15.982350, 45.814600], [15.982564, 45.814488], 
+                  [15.982779, 45.814391], [15.982983, 45.814226], [15.983208, 45.814069], [15.983390, 45.813890], 
+                  [15.983401, 45.813643], [15.983551, 45.812132], [15.991265, 45.807406], [15.992263, 45.806419], 
+                  [15.993872, 45.805506], [15.995954, 45.804841], [16.002359, 45.802859]
+                ]
+              }
+            }
+          ]
+        };
+
+        // Iscrtavanje
+        L.geoJSON(medvescakData, {
+            style: function(feature) {
+                return { 
+                    color: feature.properties.color, 
+                    weight: 6, 
+                    opacity: 0.8 
+                };
+            },
+            onEachFeature: function(feature, layer) {
+                const popupContent = `
+                    <div style="font-family: 'Montserrat', sans-serif;">
+                        <h3 style="margin: 0 0 5px 0; color: ${feature.properties.color}">${feature.properties.name}</h3>
+                        <strong style="font-size: 0.85rem; color: #666;">${feature.properties.period}</strong>
+                        <p style="margin: 10px 0 0 0; font-size: 0.9rem;">${feature.properties.desc}</p>
+                    </div>
+                `;
+                layer.bindPopup(popupContent);
+                
+                layer.on('mouseover', function() {
+                    this.setStyle({ weight: 9, opacity: 1 });
+                });
+                layer.on('mouseout', function() {
+                    this.setStyle({ weight: 6, opacity: 0.8 });
+                });
+            }
+        }).addTo(map);
+
+        // Legenda
+        const legend = L.control({position: 'bottomright'});
+        legend.onAdd = function (map) {
+            const div = L.DomUtil.create('div', 'map-legend');
+            div.innerHTML = `
+                <span class="legend-title">Tumač znakova</span>
+                <div class="legend-item">
+                    <div class="color-box" style="background:#0077b6"></div>
+                    <span>Staro korito (Tkalčićeva)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box" style="background:#e76f51"></div>
+                    <span>Novo regulirano korito</span>
+                </div>
+            `;
+            return div;
+        };
+        legend.addTo(map);
+
+    </script>
+</body>
+</html>
