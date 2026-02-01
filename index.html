@@ -66,16 +66,16 @@
             position: relative;
         }
 
-        /* Smooth flowing stream under the picture - subtle and elegant */
+        /* Enhanced flowing stream under the picture - more visible and taller */
         .stream-container {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 120px;
+            height: 200px; /* Increased height */
             overflow: hidden;
             z-index: 1;
-            opacity: 0.85;
+            opacity: 1; /* Full opacity */
         }
 
         .stream {
@@ -85,16 +85,17 @@
             right: 0;
             height: 100%;
             background: linear-gradient(90deg, 
-                rgba(26, 83, 92, 0.1) 0%, 
-                rgba(42, 157, 143, 0.2) 25%, 
-                rgba(78, 205, 196, 0.3) 50%, 
-                rgba(42, 157, 143, 0.2) 75%, 
-                rgba(26, 83, 92, 0.1) 100%);
-            mask-image: url("data:image/svg+xml,%3Csvg width='1200' height='120' viewBox='0 0 1200 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,60 C150,30 250,90 400,60 C550,30 650,90 800,60 C950,30 1050,90 1200,60 L1200,120 L0,120 Z' fill='white'/%3E%3C/svg%3E");
-            mask-size: 1200px 120px;
+                rgba(26, 83, 92, 0.8) 0%, 
+                rgba(42, 157, 143, 0.9) 25%, 
+                rgba(78, 205, 196, 1) 50%, 
+                rgba(42, 157, 143, 0.9) 75%, 
+                rgba(26, 83, 92, 0.8) 100%);
+            mask-image: url("data:image/svg+xml,%3Csvg width='1200' height='200' viewBox='0 0 1200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,100 C150,50 250,150 400,100 C550,50 650,150 800,100 C950,50 1050,150 1200,100 L1200,200 L0,200 Z' fill='white'/%3E%3C/svg%3E");
+            mask-size: 1200px 200px;
             mask-repeat: repeat-x;
             mask-position: 0 bottom;
-            animation: streamFlow 40s linear infinite;
+            animation: streamFlow 30s linear infinite;
+            box-shadow: 0 0 30px rgba(78, 205, 196, 0.4);
         }
 
         .stream::before {
@@ -106,9 +107,9 @@
             bottom: 0;
             background: linear-gradient(90deg, 
                 transparent 0%, 
-                rgba(255, 255, 255, 0.1) 50%, 
+                rgba(255, 255, 255, 0.3) 50%, 
                 transparent 100%);
-            animation: streamShine 8s ease-in-out infinite;
+            animation: streamShine 6s ease-in-out infinite;
         }
 
         .stream::after {
@@ -117,12 +118,12 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 1px;
+            height: 2px;
             background: linear-gradient(90deg, 
                 transparent 0%, 
-                rgba(255, 255, 255, 0.3) 50%, 
+                rgba(255, 255, 255, 0.5) 50%, 
                 transparent 100%);
-            animation: streamReflection 12s linear infinite;
+            animation: streamReflection 8s linear infinite;
         }
 
         @keyframes streamFlow {
@@ -135,14 +136,15 @@
         }
 
         @keyframes streamShine {
-            0%, 100% {
+            0% {
                 opacity: 0.3;
                 transform: translateX(-100%);
             }
             50% {
-                opacity: 0.5;
+                opacity: 0.6;
             }
             100% {
+                opacity: 0.3;
                 transform: translateX(100%);
             }
         }
@@ -156,49 +158,68 @@
             }
         }
 
-        /* Subtle water droplets */
+        /* Enhanced water droplets */
         .water-droplet {
             position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.3);
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.6);
             border-radius: 50%;
-            animation: dropletFloat 15s linear infinite;
+            animation: dropletFloat 12s linear infinite;
             z-index: 2;
+            filter: blur(0.5px);
         }
 
         .water-droplet:nth-child(1) {
-            bottom: 20px;
+            bottom: 40px;
             left: 10%;
             animation-delay: 0s;
         }
 
         .water-droplet:nth-child(2) {
-            bottom: 40px;
+            bottom: 80px;
             left: 30%;
-            animation-delay: 2s;
-            width: 3px;
-            height: 3px;
+            animation-delay: 1s;
+            width: 4px;
+            height: 4px;
         }
 
         .water-droplet:nth-child(3) {
-            bottom: 30px;
+            bottom: 60px;
             left: 50%;
-            animation-delay: 4s;
+            animation-delay: 2s;
         }
 
         .water-droplet:nth-child(4) {
-            bottom: 50px;
+            bottom: 100px;
             left: 70%;
-            animation-delay: 6s;
-            width: 5px;
-            height: 5px;
+            animation-delay: 3s;
+            width: 8px;
+            height: 8px;
         }
 
         .water-droplet:nth-child(5) {
-            bottom: 25px;
+            bottom: 50px;
             left: 90%;
-            animation-delay: 8s;
+            animation-delay: 4s;
+        }
+
+        .water-droplet:nth-child(6) {
+            bottom: 70px;
+            left: 20%;
+            animation-delay: 1.5s;
+        }
+
+        .water-droplet:nth-child(7) {
+            bottom: 90px;
+            left: 60%;
+            animation-delay: 2.5s;
+        }
+
+        .water-droplet:nth-child(8) {
+            bottom: 30px;
+            left: 40%;
+            animation-delay: 3.5s;
         }
 
         @keyframes dropletFloat {
@@ -207,13 +228,13 @@
                 opacity: 0;
             }
             10% {
-                opacity: 0.5;
+                opacity: 0.8;
             }
             90% {
-                opacity: 0.5;
+                opacity: 0.8;
             }
             100% {
-                transform: translateY(-60px) rotate(180deg);
+                transform: translateY(-100px) rotate(360deg);
                 opacity: 0;
             }
         }
@@ -238,6 +259,16 @@
             z-index: 1;
             font-weight: 700;
             letter-spacing: 1px;
+            animation: titleFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
         }
 
         .subtitle {
@@ -253,12 +284,24 @@
             border-radius: 10px;
             backdrop-filter: blur(5px);
             border-left: 4px solid var(--secondary);
+            animation: subtitleFadeIn 2s ease-out;
+        }
+
+        @keyframes subtitleFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* GLAVNI SADRŽAJ */
         .container {
             max-width: 1000px;
-            margin: -80px auto 60px;
+            margin: -120px auto 60px;
             position: relative;
             z-index: 10;
         }
@@ -273,6 +316,18 @@
             position: relative;
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: sectionRise 0.8s ease-out;
+        }
+
+        @keyframes sectionRise {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .section:hover {
@@ -306,6 +361,18 @@
             height: 4px;
             background: var(--gradient-1);
             border-radius: 2px;
+            animation: underlineFlow 4s ease-in-out infinite;
+        }
+
+        @keyframes underlineFlow {
+            0%, 100% {
+                width: 80px;
+                background: var(--gradient-1);
+            }
+            50% {
+                width: 100px;
+                background: var(--gradient-2);
+            }
         }
 
         h3 {
@@ -314,12 +381,23 @@
             color: var(--primary);
             display: flex;
             align-items: center;
+            transition: transform 0.3s ease;
         }
 
         h3::before {
             content: '↪';
             margin-right: 10px;
             color: var(--accent);
+            animation: arrowPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes arrowPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
         }
 
         .quote-box {
@@ -333,6 +411,16 @@
             border-radius: 10px;
             position: relative;
             box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
+            animation: quoteFloat 8s ease-in-out infinite;
+        }
+
+        @keyframes quoteFloat {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(5px);
+            }
         }
 
         .quote-box::before {
@@ -371,6 +459,16 @@
             width: 4px;
             height: 100%;
             background: var(--secondary);
+            animation: gridGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes gridGlow {
+            0%, 100% {
+                box-shadow: 0 0 5px var(--secondary);
+            }
+            50% {
+                box-shadow: 0 0 15px var(--secondary);
+            }
         }
 
         .grid-item:hover {
@@ -389,7 +487,20 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             border: 5px solid white;
+            animation: mapRise 1s ease-out;
         }
+
+        @keyframes mapRise {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
         #map { 
             height: 100%; 
             width: 100%; 
@@ -405,7 +516,20 @@
             line-height: 1.5;
             z-index: 1000;
             border: 1px solid rgba(0, 0, 0, 0.1);
+            animation: legendSlideIn 0.8s ease-out;
         }
+
+        @keyframes legendSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
         .legend-title { 
             font-weight: bold; 
             margin-bottom: 10px; 
@@ -437,6 +561,16 @@
             font-size: 0.9rem;
             position: relative;
             overflow: hidden;
+            animation: footerFloat 10s ease-in-out infinite;
+        }
+
+        @keyframes footerFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
         }
 
         footer::before {
@@ -447,6 +581,16 @@
             right: 0;
             height: 5px;
             background: var(--gradient-2);
+            animation: headerFlow 4s linear infinite;
+        }
+
+        @keyframes headerFlow {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 100px 0;
+            }
         }
 
         footer p {
@@ -458,27 +602,80 @@
             color: #4ecdc4;
         }
 
-        /* Subtle stream flow at the bottom of footer */
+        /* Enhanced stream flow at the bottom of footer */
         .stream-flow {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 20px;
+            height: 30px;
             background: repeating-linear-gradient(
                 90deg,
                 transparent,
                 transparent 15px,
-                rgba(78, 205, 196, 0.2) 15px,
-                rgba(78, 205, 196, 0.2) 30px
+                rgba(78, 205, 196, 0.5) 15px,
+                rgba(78, 205, 196, 0.5) 30px
             );
-            animation: streamFlowFooter 12s linear infinite;
-            opacity: 0.5;
+            animation: streamFlowFooter 8s linear infinite;
+            opacity: 0.8;
         }
 
         @keyframes streamFlowFooter {
             0% { background-position: 0 0; }
             100% { background-position: 30px 0; }
+        }
+
+        /* Floating particles in background */
+        .floating-particle {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: rgba(78, 205, 196, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            animation: particleFloat 20s linear infinite;
+        }
+
+        .floating-particle:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-particle:nth-child(2) {
+            top: 60%;
+            left: 80%;
+            animation-delay: 5s;
+        }
+
+        .floating-particle:nth-child(3) {
+            top: 40%;
+            left: 30%;
+            animation-delay: 10s;
+        }
+
+        .floating-particle:nth-child(4) {
+            top: 80%;
+            left: 60%;
+            animation-delay: 15s;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) rotate(180deg);
+                opacity: 0;
+            }
         }
 
         /* Responsive Design */
@@ -492,11 +689,11 @@
                 padding: 15px;
             }
             .container {
-                margin: -60px auto 40px;
+                margin: -80px auto 40px;
                 padding: 0 15px;
             }
             .stream-container {
-                height: 80px;
+                height: 150px;
             }
         }
 
@@ -507,21 +704,30 @@
                 grid-template-columns: 1fr;
             }
             .stream-container {
-                height: 60px;
+                height: 120px;
             }
         }
     </style>
 </head>
 <body>
 
+    <!-- Floating background particles -->
+    <div class="floating-particle"></div>
+    <div class="floating-particle"></div>
+    <div class="floating-particle"></div>
+    <div class="floating-particle"></div>
+
     <div class="hero-wrapper">
         <header>
             <h1>Potok Medveščak</h1>
             <p class="subtitle">Od mlinova i sukoba do podzemnog kanala: Priča o vodi koja je izgradila, a potom podijelila Zagreb.</p>
         </header>
-        <!-- Subtle flowing stream design -->
+        <!-- Enhanced flowing stream design -->
         <div class="stream-container">
             <div class="stream"></div>
+            <div class="water-droplet"></div>
+            <div class="water-droplet"></div>
+            <div class="water-droplet"></div>
             <div class="water-droplet"></div>
             <div class="water-droplet"></div>
             <div class="water-droplet"></div>
