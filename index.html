@@ -36,7 +36,6 @@
 
         /* HERO SEKCIJA (S tvojom slikom) */
         header {
-            /* Ovdje se učitava tvoja slika */
             background: url('Gemini_Generated_Image_6q127l6q127l6q12.png');
             background-attachment: fixed; /* Parallax efekt */
             background-position: center;
@@ -50,6 +49,18 @@
             text-align: center;
             color: white;
             padding: 20px;
+            position: relative;
+        }
+
+        /* Add overlay for better text readability */
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
         }
 
         h1 {
@@ -57,6 +68,8 @@
             color: white;
             text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
             margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
         }
 
         .subtitle {
@@ -64,6 +77,8 @@
             max-width: 800px;
             text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
             font-weight: 300;
+            position: relative;
+            z-index: 1;
         }
 
         /* GLAVNI SADRŽAJ */
@@ -116,7 +131,11 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.15);
         }
-        #map { height: 100%; width: 100%; }
+        #map { 
+            height: 100%; 
+            width: 100%; 
+            background-color: #e0f2f1; /* Fallback color */
+        }
 
         .map-legend {
             background: white;
@@ -125,6 +144,7 @@
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             font-size: 0.9rem;
             line-height: 1.5;
+            z-index: 1000;
         }
         .legend-title { font-weight: bold; margin-bottom: 5px; display: block; }
         .legend-item { display: flex; align-items: center; margin-bottom: 5px; }
@@ -211,13 +231,27 @@
         // Inicijalizacija karte
         const map = L.map('map').setView([45.816, 15.983], 15);
 
-        // Promijenjena mapa - Vintage/Historijski stil
-        L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.{ext}', {
-            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            subdomains: 'abcd',
-            minZoom: 0,
-            maxZoom: 20,
-            ext: 'png'
+        // TOPOGRAFSKA PODLOGA - više slojeva za bogatiju kartu
+        // Sloj 1: Topografska baza sa konturama i reljefom
+        const topoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            maxZoom: 17,
+            attribution: 'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap (CC-BY-SA)'
+        }).addTo(map);
+
+        // Sloj 2: Prolazna nadopuna za vizualnu dubinu (Hillshading)
+        const hillshadeLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 15,
+            attribution: 'Hillshade: Esri',
+            opacity: 0.3,
+            zIndex: 1
+        }).addTo(map);
+
+        // Sloj 3: Vodene površine za bolju preglednost (opcionalno, prozirno)
+        const waterLayer = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team',
+            opacity: 0.1,
+            zIndex: 2
         }).addTo(map);
 
         // GeoJSON podaci (Integrirani iz tvoje datoteke)
@@ -297,52 +331,86 @@
           ]
         };
 
-        // Iscrtavanje
+        // Iscrtavanje sa poboljšanim stilovima
         L.geoJSON(medvescakData, {
             style: function(feature) {
                 return { 
                     color: feature.properties.color, 
-                    weight: 6, 
-                    opacity: 0.8 
+                    weight: 7, 
+                    opacity: 0.85,
+                    lineCap: 'round',
+                    lineJoin: 'round',
+                    dashArray: feature.properties.name.includes("Staro") ? '10, 5' : null, // Crticama za stari tok
+                    className: 'stream-line'
                 };
             },
             onEachFeature: function(feature, layer) {
                 const popupContent = `
-                    <div style="font-family: 'Montserrat', sans-serif;">
-                        <h3 style="margin: 0 0 5px 0; color: ${feature.properties.color}">${feature.properties.name}</h3>
-                        <strong style="font-size: 0.85rem; color: #666;">${feature.properties.period}</strong>
-                        <p style="margin: 10px 0 0 0; font-size: 0.9rem;">${feature.properties.desc}</p>
+                    <div style="font-family: 'Montserrat', sans-serif; max-width: 300px;">
+                        <h3 style="margin: 0 0 5px 0; color: ${feature.properties.color}; border-bottom: 2px solid ${feature.properties.color}; padding-bottom: 5px;">${feature.properties.name}</h3>
+                        <strong style="font-size: 0.85rem; color: #666; display: block; margin-bottom: 10px;">${feature.properties.period}</strong>
+                        <p style="margin: 10px 0 0 0; font-size: 0.9rem; line-height: 1.5;">${feature.properties.desc}</p>
                     </div>
                 `;
                 layer.bindPopup(popupContent);
                 
+                // Dodajemo shadow efekt na hover
                 layer.on('mouseover', function() {
-                    this.setStyle({ weight: 9, opacity: 1 });
+                    this.setStyle({ 
+                        weight: 10, 
+                        opacity: 1,
+                        color: this.feature.properties.color
+                    });
                 });
                 layer.on('mouseout', function() {
-                    this.setStyle({ weight: 6, opacity: 0.8 });
+                    this.setStyle({ 
+                        weight: 7, 
+                        opacity: 0.85,
+                        color: this.feature.properties.color
+                    });
                 });
             }
         }).addTo(map);
 
-        // Legenda
+        // Legenda s poboljšanim stilom
         const legend = L.control({position: 'bottomright'});
         legend.onAdd = function (map) {
             const div = L.DomUtil.create('div', 'map-legend');
             div.innerHTML = `
-                <span class="legend-title">Tumač znakova</span>
-                <div class="legend-item">
-                    <div class="color-box" style="background:#0077b6"></div>
-                    <span>Staro korito (Tkalčićeva)</span>
+                <span class="legend-title" style="color: var(--primary); font-size: 1rem; margin-bottom: 10px; display: block;">Tumač znakova</span>
+                <div class="legend-item" style="margin-bottom: 8px;">
+                    <div class="color-box" style="background:#0077b6; border: 1px solid #005885; height: 8px;"></div>
+                    <span><strong>Staro korito (Tkalčićeva)</strong><br><small>Prije 1898. godine</small></span>
                 </div>
-                <div class="legend-item">
-                    <div class="color-box" style="background:#e76f51"></div>
-                    <span>Novo regulirano korito</span>
+                <div class="legend-item" style="margin-bottom: 8px;">
+                    <div class="color-box" style="background:#e76f51; border: 1px solid #d65c40; height: 8px;"></div>
+                    <span><strong>Novo regulirano korito</strong><br><small>Nakon 1898. godine</small></span>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.8rem; color: #666; border-top: 1px solid #eee; padding-top: 8px;">
+                    Topografska karta prikazuje reljef terena
                 </div>
             `;
             return div;
         };
         legend.addTo(map);
+
+        // Dodajemo kontrolu za slojeve
+        const baseLayers = {
+            "Topografska": topoLayer,
+            "Jednostavna": L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+            })
+        };
+
+        const overlayLayers = {
+            "Hillshading": hillshadeLayer,
+            "Vodene površine": waterLayer
+        };
+
+        L.control.layers(baseLayers, overlayLayers, {
+            collapsed: false,
+            position: 'topleft'
+        }).addTo(map);
 
     </script>
 </body>
